@@ -2,10 +2,12 @@
  *
  * @file interrupts.cpp
  * @author Sasisekhar Govind
+ * @author Wenxuan Han 101256669
+ * @author Tony Yao 101298080
  *
  */
 
-#include<interrupts.hpp>
+#include "interrupts.hpp"
 
 std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string> trace_file, int time, std::vector<std::string> vectors, std::vector<int> delays, std::vector<external_file> external_files, PCB current, std::vector<PCB> wait_queue) {
 
@@ -28,8 +30,14 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
             execution += intr;
             current_time = time;
 
-            execution += std::to_string(current_time) + ", " + std::to_string(delays[duration_intr]) + ", SYSCALL ISR (ADD STEPS HERE)\n";
+            execution += std::to_string(current_time) + ", " + std::to_string(delays[duration_intr]) + ", SYSCALL: run the ISR (device driver)\n";
             current_time += delays[duration_intr];
+
+            execution += std::to_string(current_time) + ", " + std::to_string(30) + ", transfer data from device to memory\n";
+            current_time += 30;
+
+            execution += std::to_string(current_time) + ", " + std::to_string(20) + ", check for errors\n";
+            current_time += 20;
 
             execution +=  std::to_string(current_time) + ", 1, IRET\n";
             current_time += 1;
@@ -50,13 +58,25 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
 
             ///////////////////////////////////////////////////////////////////////////////////////////
             //Add your FORK output here
+            // Create child PCB
+            PCB child(current.PID + 1, current.PID, current.program_name, current.size, current.partition_number);
+            wait_queue.push_back(child);
+
+            execution += std::to_string(current_time) + ", " + std::to_string(delays[2]) + ", FORK executed: child PID " + std::to_string(child.PID) + "\n";
+            current_time += delays[2];
+
+            // Recursively run the child trace
+            //auto [child_exec, child_status, child_time] = simulate_trace(trace_file, current_time, vectors, delays, external_files, child, wait_queue);
+            //execution += child_exec;
+            //system_status += child_status;
+            //current_time = child_time;
 
 
 
             ///////////////////////////////////////////////////////////////////////////////////////////
 
             //The following loop helps you do 2 things:
-            // * Collect the trace of the chile (and only the child, skip parent)
+            // * Collect the trace of the child (and only the child, skip parent)
             // * Get the index of where the parent is supposed to start executing from
             std::vector<std::string> child_trace;
             bool skip = true;
@@ -156,7 +176,7 @@ int main(int argc, char** argv) {
     std::vector<PCB> wait_queue;
 
     /******************ADD YOUR VARIABLES HERE*************************/
-
+    int transfer_data_delay = 30;
 
     /******************************************************************/
 

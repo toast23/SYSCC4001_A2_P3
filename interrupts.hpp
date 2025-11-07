@@ -97,7 +97,7 @@ std::vector<std::string> split_delim(std::string input, std::string delim) {
 std::tuple<std::vector<std::string>, std::vector<int>, std::vector<external_file>>parse_args(int argc, char** argv) {
     if(argc != 5) {
         std::cout << "ERROR!\nExpected 4 argument, received " << argc - 1 << std::endl;
-        std::cout << "To run the program, do: ./interrutps <your_trace_file.txt> <your_vector_table.txt> <your_device_table.txt> <your_external_files.txt>" << std::endl;
+        std::cout << "To run the program, do: ./interrupts <your_trace_file.txt> <your_vector_table.txt> <your_device_table.txt> <your_external_files.txt>" << std::endl;
         exit(1);
     }
 
@@ -159,7 +159,7 @@ std::tuple<std::vector<std::string>, std::vector<int>, std::vector<external_file
     return {vectors, delays, external_files};
 }
 
-//Parces each trace and returns a tuple: {Tace activity, duration or interrupt number, program name (if applicable)}
+//Parses each trace and returns a tuple: {Trace activity, duration or interrupt number, program name (if applicable)}
 std::tuple<std::string, int, std::string> parse_trace(std::string trace) {
     //split line by ','
     auto parts = split_delim(trace, ",");
