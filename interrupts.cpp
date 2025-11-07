@@ -58,21 +58,14 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
 
             ///////////////////////////////////////////////////////////////////////////////////////////
             //Add your FORK output here
-            // Create child PCB
-            PCB child(current.PID + 1, current.PID, current.program_name, current.size, current.partition_number);
-            wait_queue.push_back(child);
+            execution += std::to_string(current_time) + ", 4, copy parent PCB to child PCB\n";
+            current_time += 4;       
+            
+            execution += std::to_string(current_time) + ", 1, assign new PID and address space to child\n";
+            current_time += 1;      
 
-            execution += std::to_string(current_time) + ", " + std::to_string(delays[2]) + ", FORK executed: child PID " + std::to_string(child.PID) + "\n";
-            current_time += delays[2];
-
-            // Recursively run the child trace
-            //auto [child_exec, child_status, child_time] = simulate_trace(trace_file, current_time, vectors, delays, external_files, child, wait_queue);
-            //execution += child_exec;
-            //system_status += child_status;
-            //current_time = child_time;
-
-
-
+            execution += std::to_string(current_time) + ", 1, scheduler called\n";
+            current_time += 1;
             ///////////////////////////////////////////////////////////////////////////////////////////
 
             //The following loop helps you do 2 things:
@@ -111,9 +104,19 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
 
             ///////////////////////////////////////////////////////////////////////////////////////////
             //With the child's trace, run the child (HINT: think recursion)
-
-
-
+            if(!child_trace.empty()) {
+                auto [child_execution, child_status, new_time] = simulate_trace(
+                                                        child_trace,
+                                                        current_time,
+                                                        vectors,
+                                                        delays,
+                                                        external_files,
+                                                        current,   // copy of parent PCB for child
+                                                        wait_queue);
+                execution += child_execution;
+                current_time = new_time;
+                system_status += child_status;
+            }
             ///////////////////////////////////////////////////////////////////////////////////////////
 
 
