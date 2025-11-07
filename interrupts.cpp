@@ -62,19 +62,23 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
             child.PID = current.PID + 1;
             child.PPID = current.PID;
             child.partition_number = -1;
+
             execution += std::to_string(current_time) + ", " + std::to_string(duration_intr) + ", cloning the PCB\n"; // duration taken from the trace
             current_time += duration_intr;
 
             if(!allocate_memory(&child)) {
                 std::cerr << "ERROR! Memory allocation failed!" << std::endl;
             }
+
+            wait_queue.push_back(current);
     
             execution += std::to_string(current_time) + ", 0, scheduler called\n";
 
             execution +=  std::to_string(current_time) + ", 1, IRET\n";
             current_time += 1;
 
-            system_status += print_PCB(current, wait_queue);
+            system_status += "time: " + std::to_string(current_time) + " current trace: " + trace + "\n";
+            system_status += print_PCB(child, wait_queue);
             ///////////////////////////////////////////////////////////////////////////////////////////
 
             //The following loop helps you do 2 things:
@@ -114,6 +118,14 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
             ///////////////////////////////////////////////////////////////////////////////////////////
             //With the child's trace, run the child (HINT: think recursion)
             if(!child_trace.empty()) {
+                // remove child process from wait queue
+                for (auto it = wait_queue.begin(); it != wait_queue.end(); ++it) {
+                    if (it->PID == child.PID) { 
+                        wait_queue.erase(it);      
+                        break;                     
+                    }
+                }
+
                 auto [child_execution, child_status, new_time] = simulate_trace(
                                                         child_trace,
                                                         current_time,
@@ -140,7 +152,20 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
             execution += std::to_string(current_time) + ", 50, Program is " + std::to_string(program_size) + " Mb large\n";
             current_time += 50;
 
+            free_memory(&current);
+
+            // remove current process from wait queue
+            for (auto it = wait_queue.begin(); it != wait_queue.end(); ++it) {
+                if (it->PID == current.PID) { 
+                    wait_queue.erase(it);      
+                    break;                     
+                }
+            }
+
+            current.program_name = program_name;
+            current.size = program_size;
             current.partition_number = -1;
+
             if(!allocate_memory(&current)) {
                 std::cerr << "ERROR! Memory allocation failed!" << std::endl;
             }
