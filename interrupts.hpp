@@ -53,7 +53,7 @@ struct external_file{
 //returns true if the allocation was sucessful, false if not.
 bool allocate_memory(PCB* current) {
     for(int i = 5; i >= 0; i--) { //Start from smallest partition
-        //check is the code will fit and if the partition is empty
+        //check if the code will fit and if the partition is empty
         if(memory[i].size >= current->size && memory[i].code == "empty") {
             current->partition_number = memory[i].partition_number;
             memory[i].code = current->program_name;

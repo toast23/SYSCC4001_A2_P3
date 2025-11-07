@@ -30,7 +30,7 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
             execution += intr;
             current_time = time;
 
-            execution += std::to_string(current_time) + ", " + std::to_string(delays[duration_intr]) + ", SYSCALL: run the ISR (device driver)\n";
+            execution += std::to_string(current_time) + ", " + std::to_string(delays[duration_intr]) + ", SYSCALL ISR\n";
             current_time += delays[duration_intr];
 
             execution += std::to_string(current_time) + ", " + std::to_string(30) + ", transfer data from device to memory\n";
@@ -58,13 +58,23 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
 
             ///////////////////////////////////////////////////////////////////////////////////////////
             //Add your FORK output here
+            PCB child = current;
+            child.PID = current.PID + 1;
+            child.PPID = current.PID;
+            child.partition_number = -1;
             execution += std::to_string(current_time) + ", " + std::to_string(duration_intr) + ", cloning the PCB\n"; // duration taken from the trace
             current_time += duration_intr;
 
+            if(!allocate_memory(&child)) {
+                std::cerr << "ERROR! Memory allocation failed!" << std::endl;
+            }
+    
             execution += std::to_string(current_time) + ", 0, scheduler called\n";
 
             execution +=  std::to_string(current_time) + ", 1, IRET\n";
             current_time += 1;
+
+            system_status += print_PCB(current, wait_queue);
             ///////////////////////////////////////////////////////////////////////////////////////////
 
             //The following loop helps you do 2 things:
@@ -110,7 +120,7 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
                                                         vectors,
                                                         delays,
                                                         external_files,
-                                                        current,   // copy of parent PCB for child
+                                                        child,
                                                         wait_queue);
                 execution += child_execution;
                 current_time = new_time;
@@ -126,14 +136,32 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
 
             ///////////////////////////////////////////////////////////////////////////////////////////
             //Add your EXEC output here
-            execution += std::to_string(current_time) + ", 2, update PCB info\n";
-            current_time += 4;      
+            unsigned int program_size = get_size(program_name, external_files);
+            execution += std::to_string(current_time) + ", 50, Program is " + std::to_string(program_size) + " Mb large\n";
+            current_time += 50;
 
-            execution += std::to_string(current_time) + ", 1, scheduler called\n";
-            current_time += 1;
+            current.partition_number = -1;
+            if(!allocate_memory(&current)) {
+                std::cerr << "ERROR! Memory allocation failed!" << std::endl;
+            }
+
+            int load_time = program_size * 15;
+            execution += std::to_string(current_time) + ", " + std::to_string(load_time) + ", loading program into memory\n";
+            current_time += load_time;
+
+            execution += std::to_string(current_time) + ", 3, marking partition as occupied\n";
+            current_time += 3;                 
+
+            execution += std::to_string(current_time) + ", 6, updating PCB\n";
+            current_time += 6;      
+
+            execution += std::to_string(current_time) + ", 0, scheduler called\n";
 
             execution +=  std::to_string(current_time) + ", 1, IRET\n";
             current_time += 1;
+            
+            system_status += "time: " + std::to_string(current_time) + " current trace: " + trace + "\n";
+            system_status += print_PCB(current, wait_queue);
             ///////////////////////////////////////////////////////////////////////////////////////////
 
 
