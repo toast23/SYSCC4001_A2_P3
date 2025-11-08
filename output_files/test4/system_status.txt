@@ -1,0 +1,46 @@
+time: 24 current trace: FORK, 10
++------------------------------------------------------+
+| PID |program name |partition number | size |   state |
++------------------------------------------------------+
+|   1 |        init |               5 |    1 | running |
+|   0 |        init |               6 |    1 | waiting |
++------------------------------------------------------+
+time: 48 current trace: FORK, 10
++------------------------------------------------------+
+| PID |program name |partition number | size |   state |
++------------------------------------------------------+
+|   1 |        init |               4 |    1 | running |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
++------------------------------------------------------+
+time: 72 current trace: FORK, 10
++------------------------------------------------------+
+| PID |program name |partition number | size |   state |
++------------------------------------------------------+
+|   1 |        init |               3 |    1 | running |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
++------------------------------------------------------+
+time: 96 current trace: FORK, 10
++------------------------------------------------------+
+| PID |program name |partition number | size |   state |
++------------------------------------------------------+
+|   1 |        init |               2 |    1 | running |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
++------------------------------------------------------+
+time: 120 current trace: FORK, 10
++------------------------------------------------------+
+| PID |program name |partition number | size |   state |
++------------------------------------------------------+
+|   1 |        init |               1 |    1 | running |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
+|   0 |        init |               6 |    1 | waiting |
++------------------------------------------------------+
+*****fork ERROR! Memory allocation failed!*****

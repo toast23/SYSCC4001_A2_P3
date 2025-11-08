@@ -1,0 +1,41 @@
+0, 1, switch to kernel mode
+1, 10, context saved
+11, 1, find vector 2 in memory position 0x0004
+12, 1, load address 0X0695 into the PC
+13, 10, cloning the PCB
+23, 0, scheduler called
+23, 1, IRET
+24, 1, switch to kernel mode
+25, 10, context saved
+35, 1, find vector 2 in memory position 0x0004
+36, 1, load address 0X0695 into the PC
+37, 10, cloning the PCB
+47, 0, scheduler called
+47, 1, IRET
+48, 1, switch to kernel mode
+49, 10, context saved
+59, 1, find vector 2 in memory position 0x0004
+60, 1, load address 0X0695 into the PC
+61, 10, cloning the PCB
+71, 0, scheduler called
+71, 1, IRET
+72, 1, switch to kernel mode
+73, 10, context saved
+83, 1, find vector 2 in memory position 0x0004
+84, 1, load address 0X0695 into the PC
+85, 10, cloning the PCB
+95, 0, scheduler called
+95, 1, IRET
+96, 1, switch to kernel mode
+97, 10, context saved
+107, 1, find vector 2 in memory position 0x0004
+108, 1, load address 0X0695 into the PC
+109, 10, cloning the PCB
+119, 0, scheduler called
+119, 1, IRET
+120, 1, switch to kernel mode
+121, 10, context saved
+131, 1, find vector 2 in memory position 0x0004
+132, 1, load address 0X0695 into the PC
+133, 10, cloning the PCB
+*****fork ERROR! Memory allocation failed!*****
