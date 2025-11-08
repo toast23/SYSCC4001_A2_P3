@@ -1,0 +1,6 @@
+CPU, 8
+CPU, 6
+SYSCALL, 5
+FORK, 3
+END_IO, 2
+CPU, 9
